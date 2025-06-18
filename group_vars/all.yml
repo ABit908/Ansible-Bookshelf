@@ -1,0 +1,12 @@
+# group_vars/all.yml
+PROJECT_ID: "gcp-project-terraform-462411"
+CLOUDSQL_USER: "testuser"
+CLOUDSQL_PASSWORD: "test123"
+CLOUDSQL_DATABASE: "bookshelf_db"
+CLOUDSQL_CONNECTION_NAME: "gcp-project-terraform-462411:us-central1:bookshelf-sql"
+CLOUD_STORAGE_BUCKET: "bookshelf-test-bucket-a"
+GOOGLE_OAUTH2_CLIENT_ID: "dummy"
+GOOGLE_OAUTH2_CLIENT_SECRET: "dummy"
+DATA_BACKEND: "cloudsql"
+project_dir: "/home/amanpm108/projects/getting-started-python/7-gce"
+virtualenv_path: "/home/amanpm108/.pyenv/versions/3.5.10/envs/myenv"
