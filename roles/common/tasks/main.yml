@@ -21,15 +21,34 @@
     state: present
     update_cache: yes
 
-- name: Ensure pyenv and Python 3.5.10 is installed (custom step if not already installed)
+# - name: Ensure pyenv and Python 3.5.10 is installed (custom step if not already installed)
+#   shell: |
+#     curl https://pyenv.run | bash
+#     export PATH="$HOME/.pyenv/bin:$PATH"
+#     eval "$(pyenv init -)"
+#     eval "$(pyenv virtualenv-init -)"
+#     pyenv install -s 3.5.10
+#     pyenv virtualenv -f 3.5.10 myenv
+#     pip install --upgrade pip
+#   args:
+#     executable: /bin/bash
+#   become: false
+
+- name: Ensure pyenv and Python 3.5.10 are installed with virtualenv
   shell: |
-    curl https://pyenv.run | bash
-    export PATH="$HOME/.pyenv/bin:$PATH"
+    set -e
+    if [ ! -d "$HOME/.pyenv" ]; then
+      curl https://pyenv.run | bash
+    fi
+    export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH"
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     pyenv install -s 3.5.10
     pyenv virtualenv -f 3.5.10 myenv
-    pip install --upgrade pip
+    ~/.pyenv/versions/myenv/bin/pip install --upgrade pip
   args:
     executable: /bin/bash
-  become: false
+  environment:
+    PYENV_ROOT: "{{ ansible_env.HOME }}/.pyenv"
+    PATH: "{{ ansible_env.HOME }}/.pyenv/bin:{{ ansible_env.HOME }}/.pyenv/shims:{{ ansible_env.PATH }}"
+
