@@ -32,14 +32,11 @@
   args:
     executable: /bin/bash
 
-
-
 - name: Remove stray 'your-client-id' line
   lineinfile:
     path: "{{ project_dir }}/config.py"
     regexp: '^\s*''your-client-id''\s*$'
     state: absent
-
 
 - name: Upgrade pip inside virtualenv
   command: /home/amanpm108/.pyenv/versions/3.5.10/envs/myenv/bin/pip install --upgrade pip
@@ -50,31 +47,12 @@
     virtualenv: "/home/amanpm108/.pyenv/versions/3.5.10/envs/myenv"
     virtualenv_python: python3.5
 
-
-
-#- name: Initialize Cloud SQL tables
-#  command: "/home/amanpm108/.pyenv/versions/3.5.10/envs/myenv/bin/python {{ project_dir }}/bookshelf/model_cloudsql.py"
-#  args:
-#    chdir: "{{ project_dir }}"
-  #environment:
- #   PYTHONPATH: "{{ project_dir }}"
-#
-#
-#
-#
-#
-
 - name: Force SQLAlchemy to always use the live connection URI
   lineinfile:
     path: "{{ project_dir }}/config.py"
     regexp: '^SQLALCHEMY_DATABASE_URI\s*='
     line: 'SQLALCHEMY_DATABASE_URI = LIVE_SQLALCHEMY_DATABASE_URI'
     create: yes
-
-
-
-
-
 
 - name: Replace conditional GAE_INSTANCE block with static LIVE SQL URI
   ansible.builtin.replace:
@@ -83,26 +61,13 @@
       if\s+os\.environ\.get\(['"]GAE_INSTANCE['"]\):\s*\n\s*SQLALCHEMY_DATABASE_URI\s*=\s*.*?\n\s*else:\s*\n\s*SQLALCHEMY_DATABASE_URI\s*=\s*.*?
     replace: 'SQLALCHEMY_DATABASE_URI = LIVE_SQLALCHEMY_DATABASE_URI'
 
-
-
-
-
-
-
-
-
 - name: Update main.py to bind to 0.0.0.0 instead of 127.0.0.1
   lineinfile:
     path: "{{ project_dir }}/main.py"
     regexp: '^(\s*)app\.run\(host=''127\.0\.0\.1'', port=8080, debug=True\)'
     line: '    app.run(host=''0.0.0.0'', port=8080, debug=True)'
     state: present
-
-
-
-
-
-
+    
 - name: Initialize Cloud SQL tables
   command: "/home/amanpm108/.pyenv/versions/3.5.10/envs/myenv/bin/python {{ project_dir }}/bookshelf/model_cloudsql.py"
   args:
